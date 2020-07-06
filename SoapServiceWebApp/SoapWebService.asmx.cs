@@ -6,7 +6,7 @@ using System.Web.Services;
 using DataAccesLayer.Config;
 using DataAccesLayer.Repositories;
 using DataModelLayer.Models;
-using ServicesLayer;
+using ServiceLayer;
 using SoapServiceWebApp.DataTransferModel;
 
 namespace SoapServiceWebApp
@@ -21,43 +21,11 @@ namespace SoapServiceWebApp
     // [System.Web.Script.Services.ScriptService]
     public class SoapWebService : WebService
     {
-
         [WebMethod]
-        public string HelloWorld()
+        public SignInResponse signIn(string clientId, string name, string phone, string email, string password)
         {
-            return "Hello World";
-        }
+            SignInResponse response = new SignInResponse();
 
-        [WebMethod]
-        public ClientServiceResponse GetClients()
-        {
-            try
-            {
-                using (DataBaseContext context = new DataBaseContext())
-                {
-                    ClientRepository userRepository = new ClientRepository(context);
-                    ClientService clientService = new ClientService(userRepository);
-                    IEnumerable<Client> clients = clientService.GetAllClients();
-                    ClientServiceResponse response = new ClientServiceResponse();
-
-                    response.Clients = clients.ToArray();
-                    return response;
-
-                }
-            }
-            catch (Exception exeption)
-            {
-                ClientServiceResponse response = new ClientServiceResponse();
-                response.IsError = true;
-                response.Messagge = exeption.Message;
-                return response;
-            }
-        }
-
-
-        [WebMethod]
-        public SignInResponse SignIn(SignInRequest req)
-        {
             try
             {
                 using (DataBaseContext context = new DataBaseContext())
@@ -66,31 +34,219 @@ namespace SoapServiceWebApp
                     ClientService clientService = new ClientService(userRepository);
                     Client newClient = new Client();
 
-                    newClient.ClientId = req.ClientId;
-                    newClient.Name = req.Name;
-                    newClient.Phone = req.Phone;
-                    newClient.Email = req.Email;
-                    newClient.Password = req.Password;
+                    newClient.ClientId = clientId;
+                    newClient.Name = name;
+                    newClient.Phone = phone;
+                    newClient.Email = email;
+                    newClient.Password = password;
 
                     clientService.CreateClient(newClient);
 
-                    SignInResponse response = new SignInResponse();
-                   
+                    newClient.Password = null;
+                    response.Client = newClient;
                     response.Messagge = "Client Created Succesully";
                     response.StatusCode = 200;
-
-
                     return response;
 
                 }
             }
             catch (Exception exeption)
             {
-                SignInResponse response = new SignInResponse();
+                response.Client = null;
                 response.IsError = true;
                 response.Messagge = exeption.Message;
+                response.StatusCode = 500;
                 return response;
             }
         }
+
+        [WebMethod]
+        public LoginResponse login(string email, string password)
+        {
+            LoginResponse response = new LoginResponse();
+
+            try
+            {
+                using (DataBaseContext context = new DataBaseContext())
+                {
+                    ClientRepository userRepository = new ClientRepository(context);
+                    ClientService clientService = new ClientService(userRepository);
+                    Client currentClient = clientService.ValidateClientCredentials(email, password);
+
+                    if (currentClient != null)
+                    {
+                        response.Messagge = "Client Logged Succesully";
+                        response.Client = currentClient;
+                        response.Client.Password = null;
+                        response.StatusCode = 200;
+                        return response;
+                    }
+                    else
+                    {
+                        response.Messagge = "Invalid Credentials";
+                        response.StatusCode = 401;
+                        return response;
+                    }
+
+                }
+            }
+            catch (Exception exeption)
+            {
+                response.IsError = true;
+                response.Messagge = exeption.Message;
+                response.Client = null;
+                return response;
+            }
+        }
+
+        [WebMethod]
+        public CurrentBalanceBaseResponse getBalance(string clientId, string phone)
+        {
+            CurrentBalanceBaseResponse response = new CurrentBalanceBaseResponse();
+
+            try
+            {
+                using (DataBaseContext context = new DataBaseContext())
+                {
+                    WalletRepository walletRepository = new WalletRepository(context);
+                    WalletService walletService = new WalletService(walletRepository);
+
+                    ClientRepository clientRepository = new ClientRepository(context);
+                    ClientService clientService = new ClientService(clientRepository);
+
+                    Client clientsExists = clientService.GetClientByIdAndPhone(clientId, phone);
+
+                    if (clientsExists != null)
+                    {
+                        response.CurrentBalance = walletService.GetBalance(clientId);
+                        response.Messagge = "Current Balance Retrieved Succesully";
+                        response.StatusCode = 200;
+                        return response;
+                    }
+                    else
+                    {
+                        response.CurrentBalance = walletService.GetBalance(clientId);
+                        response.Messagge = "Invalid Credentials";
+                        response.StatusCode = 401;
+                        return response;
+                    }
+                }
+            }
+            catch (Exception exeption)
+            {
+                response.IsError = true;
+                response.Messagge = exeption.Message;
+                response.StatusCode = 500;
+                return response;
+            }
+        }
+
+        [WebMethod]
+        public BaseResponse payment(string clientId, decimal ammount, string detail)
+        {
+            BaseResponse response = new BaseResponse();
+
+            try
+            {
+                using (DataBaseContext context = new DataBaseContext())
+                {
+                    ClientRepository clientRepository = new ClientRepository(context);
+                    ClientService clientService = new ClientService(clientRepository);
+
+                    WalletRepository walletRepository = new WalletRepository(context);
+                    WalletService walletService = new WalletService(walletRepository);
+
+                    TransactionRepository transactionRepository = new TransactionRepository(context);
+                    TransactionService transactionService = new TransactionService(transactionRepository);
+
+                    string clientsId = clientService.GetClientById(clientId).ClientId;
+                    decimal currentBalance = walletService.GetBalance(clientId);
+                    int walletId = walletService.GetWalletByClientId(clientId).WalletId;
+
+                    //Checks if the money in the wallet is enough for the payment
+                    if (currentBalance > ammount)
+                    {
+                        Transaction payment = new Transaction();
+                        payment.WalletId = walletId;
+                        payment.Ammount = ammount;
+                        payment.Type = "pay";
+                        payment.Detail = detail;
+                        transactionService.CreateTransaction(payment);
+
+                        response.Messagge = "Payment Succesull";
+                        response.StatusCode = 200;
+                        return response;
+                    }
+                    else
+                    {
+                        response.Messagge = "Your current balance is not enough to make the payment";
+                        response.StatusCode = 403;
+                        return response;
+                    }
+                }
+            }
+            catch (Exception exeption)
+            {
+                response.IsError = true;
+                response.Messagge = exeption.Message;   
+                response.StatusCode = 500;
+                return response;
+            }
+        }
+        
+        [WebMethod]
+        public BaseResponse recharge(string clientId, string phone, decimal ammount, string detail)
+        {
+            BaseResponse response = new BaseResponse();
+
+            try
+            {
+                using (DataBaseContext context = new DataBaseContext())
+                {
+                    ClientRepository clientRepository = new ClientRepository(context);
+                    ClientService clientService = new ClientService(clientRepository);
+
+                    WalletRepository walletRepository = new WalletRepository(context);
+                    WalletService walletService = new WalletService(walletRepository);
+
+                    TransactionRepository transactionRepository = new TransactionRepository(context);
+                    TransactionService transactionService = new TransactionService(transactionRepository);
+
+                    Client validClient = clientService.GetClientByIdAndPhone(clientId, phone);
+                    decimal currentBalance = walletService.GetBalance(clientId);
+                    int walletId = walletService.GetWalletByClientId(clientId).WalletId;
+
+                    //Checks if credentials are valid 
+                    if (validClient != null)
+                    {
+                        Transaction recharge = new Transaction();
+                        recharge.WalletId = walletId;
+                        recharge.Ammount = ammount;
+                        recharge.Type = "recharge";
+                        recharge.Detail = detail;
+                        transactionService.CreateTransaction(recharge);
+
+                        response.Messagge = "Recharge Completed Succesfully";
+                        response.StatusCode = 200;
+
+                        return response;
+                    }
+                    else
+                    {
+                        response.Messagge = "Invalid Credentials";
+                        response.StatusCode = 401;
+                        return response;
+                    }   
+                }
+            }
+            catch (Exception exeption)
+            {
+                response.IsError = true;
+                response.Messagge = exeption.Message;
+                response.StatusCode = 500;
+                return response;
+            }
+        }
+
     }
 }
