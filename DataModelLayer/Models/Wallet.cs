@@ -7,10 +7,7 @@ namespace DataModelLayer.Models
     public class Wallet
     {
         public int WalletId { get; set; }
-
-        public String ClientId { get; set; }
-
-        public Decimal CurrentBalace { get; set; }
-
+        public string ClientId { get; set; }
+        public decimal CurrentBalace { get; set; }
     }
 }

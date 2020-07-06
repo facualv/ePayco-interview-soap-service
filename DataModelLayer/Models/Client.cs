@@ -6,15 +6,15 @@ namespace DataModelLayer.Models
 {
     public class Client
     {
-        public String ClientId { get; set; }
+        public string ClientId { get; set; }
 
-        public String Name { get; set; }
+        public string Name { get; set; }
 
-        public String Phone { get; set; }
+        public string Phone { get; set; }
 
-        public String Email { get; set; }
+        public string Email { get; set; }
 
-        public String Password { get; set; }
+        public string Password { get; set; }
 
     }
 }

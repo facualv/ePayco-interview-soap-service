@@ -7,13 +7,10 @@ namespace DataModelLayer.Models
     public class Transaction
     {
         public int TransactionId { get; set; }
-
         public int WalletId { get; set; }
-
-        public Decimal Ammount { get; set; }
-        public String Type { get; set; }
-
-        public String Detail { get; set; }
+        public decimal Ammount { get; set; }
+        public string Type { get; set; }
+        public string Detail { get; set; }
 
     }
 }
