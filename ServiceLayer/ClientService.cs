@@ -2,52 +2,36 @@
 using System.Collections.Generic;
 using DataAccesLayer.Repositories;
 using DataModelLayer.Models;
+using Org.BouncyCastle.Crypto.Modes.Gcm;
 
-
-namespace ServicesLayer
+namespace ServiceLayer
 {
     public class ClientService
     {
-        #region Fields
-
         private readonly ClientRepository _clientRepository;
-
-        #endregion
-
-        #region Props
-
-        #endregion
-
-        #region Constructors
-
         public ClientService(ClientRepository clientRepository)
         {
             _clientRepository = clientRepository;
         }
 
-
-        #endregion
-
-        #region Method
-
-        public Client GetClient(Client targetClient)
+        #region Methods
+        public Client GetClientById(string clientId)
         {
-            return _clientRepository.GetClient(targetClient);
+            return _clientRepository.GetClient(clientId);
         }
-
-        public IEnumerable<Client> GetAllClients()
+        public Client GetClientByIdAndPhone(string clientId, string phone)
         {
-            IEnumerable<Client> listaClientes = _clientRepository.GetAllClients(); 
-            return listaClientes;
+            return _clientRepository.GetClient(clientId, phone);
         }
-
+        public Client ValidateClientCredentials(string email, string password)
+        {
+            Client validClient = _clientRepository.GetClientByCredentials(email, password);
+            return validClient;
+        }
         public void CreateClient(Client client)
         {
              _clientRepository.CreateClient(client);
         }
-
- 
-
         #endregion
 
     }

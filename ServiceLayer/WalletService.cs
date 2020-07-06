@@ -6,36 +6,22 @@ using System.Text;
 
 namespace ServiceLayer
 {
-    class WalletService
+    public class WalletService
     {
-        #region Fields
-
         private readonly WalletRepository _walletRepository;
-
-        #endregion
-
-        #region Props
-
-        #endregion
-
-        #region Constructors
-
         public WalletService(WalletRepository walletRepository)
         {
             _walletRepository = walletRepository;
         }
 
-
-        #endregion
-
-        #region Method
-
-        public decimal GetCurrentBalance(string clientId, string phone)
+        public decimal GetBalance(string clientId)
         {
-
-            return _walletRepository.GetCurrentBalance(clientId);
+            return _walletRepository.GetBalance(clientId);
         }
 
-        #endregion
+        public Wallet GetWalletByClientId(string clientId)
+        {
+            return _walletRepository.GetWalletByClient(clientId);
+        }
     }
 }
