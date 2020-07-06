@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{EE55FAE8-8066-4990-A9E2-813144B2BB9E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDBD0C28-B159-4BFD-85B8-CF6FD1BD2C56} = {FDBD0C28-B159-4BFD-85B8-CF6FD1BD2C56}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccesLayer", "DataAccesLayer\DataAccesLayer.csproj", "{113B4C28-4CD9-4B34-8453-EEEA3E372016}"
 EndProject

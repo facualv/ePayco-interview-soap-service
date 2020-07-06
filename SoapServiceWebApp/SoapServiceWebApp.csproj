@@ -161,13 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTransferModel\BaseResponse.cs" />
-    <Compile Include="DataTransferModel\ClientServiceRequest.cs" />
-    <Compile Include="DataTransferModel\ClientServiceResponse.cs" />
-    <Compile Include="DataTransferModel\CurrentBalanceRequest.cs" />
     <Compile Include="DataTransferModel\CurrentBalanceResponse.cs" />
-    <Compile Include="DataTransferModel\PaymentRequest.cs" />
-    <Compile Include="DataTransferModel\RechargeRequest.cs" />
-    <Compile Include="DataTransferModel\SignInRequest.cs" />
+    <Compile Include="DataTransferModel\LoginResponse.cs" />
     <Compile Include="DataTransferModel\SignInResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoapWebService.asmx.cs">
