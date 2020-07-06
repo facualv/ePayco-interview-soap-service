@@ -29,9 +29,8 @@ namespace DataAccesLayer.Config
             var wallet = modelBuilder.Entity<Wallet>();
             wallet.ToTable("wallet");
             wallet.HasKey("WalletId");
-            wallet.Property(x => x.WalletId).HasColumnName("clientId");
-            wallet.Property(x => x.ClientId).HasColumnName("name");
-            wallet.Property(x => x.CurrentBalace).HasColumnName("phone");
+            wallet.Property(x => x.WalletId).HasColumnName("walletId");
+            wallet.Property(x => x.CurrentBalace).HasColumnName("currentBalance");
 
             var transaction = modelBuilder.Entity<Transaction>();
             transaction.ToTable("transaction");

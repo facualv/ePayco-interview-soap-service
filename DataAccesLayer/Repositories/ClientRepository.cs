@@ -17,25 +17,26 @@ namespace DataAccesLayer.Repositories
             _context = contex;
         }
 
-        public void CreateClient(Client client)
+        public Client GetClient(string clientId)
         {
-            _context.Set<Client>().Add(client);
-            _context.SaveChanges();
-        }
-
-        public Client GetClient(Client targetClient)
-        {
-            return _context.Set<Client>().FirstOrDefault(x => x.ClientId == targetClient.ClientId && x.Phone == targetClient.Phone);
-        }
-
-        public IEnumerable<Client> GetAllClients()
-        {
-            return _context.Set<Client>().ToList();
+            return _context.Set<Client>().Find(clientId);
         }
 
         public Client GetClient(string clientId, string phone)
         {
             return _context.Set<Client>().SingleOrDefault(x => x.ClientId == clientId && x.Phone == phone);
+        }
+
+        public Client GetClientByCredentials(string email, string password)
+        {   
+            Client client = _context.Set<Client>().SingleOrDefault(x => x.Email == email && x.Password == password);
+            return client;
+        }
+
+        public void CreateClient(Client client)
+        {
+            _context.Set<Client>().Add(client);
+            _context.SaveChanges();
         }
 
     }

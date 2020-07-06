@@ -17,10 +17,22 @@ namespace DataAccesLayer.Repositories
             _context = contex;
         }
 
-        public decimal GetCurrentBalance(string clientId)
+        public decimal GetBalance(string clientId)
         {
             var currentBalance = _context.Set<Wallet>().FirstOrDefault(x => x.ClientId == clientId).CurrentBalace;
             return currentBalance;
+        }
+
+        public Wallet GetWallet(int walletId)
+        {
+            Wallet wallet = _context.Set<Wallet>().FirstOrDefault(x => x.WalletId == walletId);
+            return wallet;
+        }
+
+        public Wallet GetWalletByClient(string clientId)
+        {
+            Wallet wallet = _context.Set<Wallet>().FirstOrDefault(x => x.ClientId == clientId);
+            return wallet;
         }
     }
 }
