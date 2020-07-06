@@ -8,7 +8,7 @@ using System.Web;
 namespace SoapServiceWebApp.DataTransferModel
 {
     [DataContract]
-    public class SignInResponse: BaseResponse
+    public class LoginResponse: BaseResponse
     {
         [DataMember]
         public Client Client { get; set; }

@@ -7,9 +7,10 @@ using System.Web;
 namespace SoapServiceWebApp.DataTransferModel
 {
     [DataContract]
-    public class CurrentBalanceResponse : BaseResponse
+    public class CurrentBalanceBaseResponse : BaseResponse
     {
         [DataMember]
         public decimal CurrentBalance { get; set; }
+
     }
 }
