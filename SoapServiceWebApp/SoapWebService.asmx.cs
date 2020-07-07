@@ -71,12 +71,12 @@ namespace SoapServiceWebApp
                 {
                     ClientRepository userRepository = new ClientRepository(context);
                     ClientService clientService = new ClientService(userRepository);
-                    Client currentClient = clientService.ValidateClientCredentials(email, password);
+                    Client clientsExists = clientService.GetClientByEmailAndPassword(email, password);
 
-                    if (currentClient != null)
+                    if (clientsExists != null)
                     {
                         response.Messagge = "Client Logged Succesully";
-                        response.Client = currentClient;
+                        response.Client = clientsExists;
                         response.Client.Password = null;
                         response.StatusCode = 200;
                         return response;
@@ -108,9 +108,6 @@ namespace SoapServiceWebApp
             {
                 using (DataBaseContext context = new DataBaseContext())
                 {
-                    WalletRepository walletRepository = new WalletRepository(context);
-                    WalletService walletService = new WalletService(walletRepository);
-
                     ClientRepository clientRepository = new ClientRepository(context);
                     ClientService clientService = new ClientService(clientRepository);
 
@@ -118,6 +115,9 @@ namespace SoapServiceWebApp
 
                     if (clientsExists != null)
                     {
+                        WalletRepository walletRepository = new WalletRepository(context);
+                        WalletService walletService = new WalletService(walletRepository);
+
                         response.CurrentBalance = walletService.GetBalance(clientId);
                         response.Messagge = "Current Balance Retrieved Succesully";
                         response.StatusCode = 200;
@@ -125,7 +125,7 @@ namespace SoapServiceWebApp
                     }
                     else
                     {
-                        response.CurrentBalance = walletService.GetBalance(clientId);
+                        //response.CurrentBalance = walletService.GetBalance(clientId);
                         response.Messagge = "Invalid Credentials";
                         response.StatusCode = 401;
                         return response;
@@ -153,36 +153,47 @@ namespace SoapServiceWebApp
                     ClientRepository clientRepository = new ClientRepository(context);
                     ClientService clientService = new ClientService(clientRepository);
 
-                    WalletRepository walletRepository = new WalletRepository(context);
-                    WalletService walletService = new WalletService(walletRepository);
+                    Client clientsExists = clientService.GetClientById(clientId);
 
-                    TransactionRepository transactionRepository = new TransactionRepository(context);
-                    TransactionService transactionService = new TransactionService(transactionRepository);
-
-                    string clientsId = clientService.GetClientById(clientId).ClientId;
-                    decimal currentBalance = walletService.GetBalance(clientId);
-                    int walletId = walletService.GetWalletByClientId(clientId).WalletId;
-
-                    //Checks if the money in the wallet is enough for the payment
-                    if (currentBalance > ammount)
+                    //Checks if credentials are valid
+                    if (clientsExists != null)
                     {
-                        Transaction payment = new Transaction();
-                        payment.WalletId = walletId;
-                        payment.Ammount = ammount;
-                        payment.Type = "pay";
-                        payment.Detail = detail;
-                        transactionService.CreateTransaction(payment);
+                        WalletRepository walletRepository = new WalletRepository(context);
+                        WalletService walletService = new WalletService(walletRepository);
 
-                        response.Messagge = "Payment Succesull";
-                        response.StatusCode = 200;
-                        return response;
+                        TransactionRepository transactionRepository = new TransactionRepository(context);
+                        TransactionService transactionService = new TransactionService(transactionRepository);
+
+                        decimal currentBalance = walletService.GetBalance(clientsExists.ClientId);
+                        int walletId = walletService.GetWalletByClientId(clientId).WalletId;
+                        //Checks if the money in the wallet is enough for the payment
+                        if (currentBalance > ammount)
+                        {
+                            Transaction payment = new Transaction();
+                            payment.WalletId = walletId;
+                            payment.Ammount = ammount;
+                            payment.Type = "pay";
+                            payment.Detail = detail;
+                            transactionService.CreateTransaction(payment);
+
+                            response.Messagge = "Payment Succesull";
+                            response.StatusCode = 200;
+                            return response;
+                        }
+                        else
+                        {
+                            response.Messagge = "Your current balance is not enough to make the payment";
+                            response.StatusCode = 403;
+                            return response;
+                        }
+
                     }
                     else
                     {
-                        response.Messagge = "Your current balance is not enough to make the payment";
-                        response.StatusCode = 403;
+                        response.Messagge = "Invalid Credentials";
+                        response.StatusCode = 401;
                         return response;
-                    }
+                    }                
                 }
             }
             catch (Exception exeption)
@@ -206,21 +217,22 @@ namespace SoapServiceWebApp
                     ClientRepository clientRepository = new ClientRepository(context);
                     ClientService clientService = new ClientService(clientRepository);
 
-                    WalletRepository walletRepository = new WalletRepository(context);
-                    WalletService walletService = new WalletService(walletRepository);
-
-                    TransactionRepository transactionRepository = new TransactionRepository(context);
-                    TransactionService transactionService = new TransactionService(transactionRepository);
-
-                    Client validClient = clientService.GetClientByIdAndPhone(clientId, phone);
-                    decimal currentBalance = walletService.GetBalance(clientId);
-                    int walletId = walletService.GetWalletByClientId(clientId).WalletId;
+                    Client clientsExists = clientService.GetClientByIdAndPhone(clientId, phone);
 
                     //Checks if credentials are valid 
-                    if (validClient != null)
+                    if (clientsExists != null)
                     {
+                        WalletRepository walletRepository = new WalletRepository(context);
+                        WalletService walletService = new WalletService(walletRepository);
+
+                        TransactionRepository transactionRepository = new TransactionRepository(context);
+                        TransactionService transactionService = new TransactionService(transactionRepository);
+
+                        decimal currentBalance = walletService.GetBalance(clientId);
+                        Wallet wallet = walletService.GetWalletByClientId(clientId);
+
                         Transaction recharge = new Transaction();
-                        recharge.WalletId = walletId;
+                        recharge.WalletId = wallet.WalletId;
                         recharge.Ammount = ammount;
                         recharge.Type = "recharge";
                         recharge.Detail = detail;
