@@ -12,11 +12,12 @@ El servisio Soap se conecta con una base de datos local en MySql y provee las fu
 
 ### POST /signup
 
-Url: https://localhost:44348/SoapWebService.asmx/signIn
+Url: https://localhost:44348/SoapWebService.asmx?op=signIn
 
 Ejemplo del cuerpo de la peticion y respuesta:
 
-xml <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
 <soap12:Body>
 <signIn xmlns="http://tempuri.org/">
@@ -27,7 +28,7 @@ xml <?xml version="1.0" encoding="utf-8"?>
 <password>string</password>
 </signIn>
 </soap12:Body>
-</soap12:Envelope> xml
+</soap12:Envelope>
 
 Ejemplo del cuerpo de la respuesta:
 
@@ -54,7 +55,7 @@ Ejemplo del cuerpo de la respuesta:
 
 ### POST /login
 
-Url: https://localhost:44348/SoapWebService.asmx/login
+Url: https://localhost:44348/SoapWebService.asmx?op=login
 
 Ejemplo del cuerpo de la peticion:
 
@@ -93,7 +94,7 @@ Ejemplo de respuesta:
 
 ### POST /getBalance
 
-Url: https://localhost:44348/SoapWebService.asmx/getBalance
+Url: https://localhost:44348/SoapWebService.asmx?op=getBalance
 
 Ejemplo del cuerpo de la peticion:
 
@@ -119,7 +120,7 @@ Ejemplo del cuerpo de la respuesta:
 
 ### POST /recharge
 
-Url: https://localhost:44348/SoapWebService.asmx/recharge
+Url: https://localhost:44348/SoapWebService.asmx?op=recharge
 
 Ejemplo del cuerpo de la peticion:
 
@@ -154,7 +155,7 @@ Ejemplo del cuerpo de la respuesta:
 
 ### POST /payment
 
-Url: https://localhost:44348/SoapWebService.asmx/recharge
+Url: https://localhost:44348/SoapWebService.asmx?op=payment
 
 Ejemplo del cuerpo de la peticion:
 
