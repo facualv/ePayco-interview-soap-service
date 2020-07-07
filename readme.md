@@ -16,8 +16,7 @@ Url: https://localhost:44348/SoapWebService.asmx/signIn
 
 Ejemplo del cuerpo de la peticion y respuesta:
 
-<?xml version="1.0" encoding="utf-8"?>
-
+xml <?xml version="1.0" encoding="utf-8"?>
 <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
 <soap12:Body>
 <signIn xmlns="http://tempuri.org/">
@@ -28,7 +27,7 @@ Ejemplo del cuerpo de la peticion y respuesta:
 <password>string</password>
 </signIn>
 </soap12:Body>
-</soap12:Envelope>
+</soap12:Envelope> xml
 
 Ejemplo del cuerpo de la respuesta:
 
