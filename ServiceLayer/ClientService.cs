@@ -13,7 +13,6 @@ namespace ServiceLayer
         {
             _clientRepository = clientRepository;
         }
-
         #region Methods
         public Client GetClientById(string clientId)
         {
@@ -23,7 +22,7 @@ namespace ServiceLayer
         {
             return _clientRepository.GetClient(clientId, phone);
         }
-        public Client ValidateClientCredentials(string email, string password)
+        public Client GetClientByEmailAndPassword(string email, string password)
         {
             Client validClient = _clientRepository.GetClientByCredentials(email, password);
             return validClient;
