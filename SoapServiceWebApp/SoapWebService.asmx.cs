@@ -61,7 +61,7 @@ namespace SoapServiceWebApp
         }
 
         [WebMethod]
-        public LoginResponse login(string email, string password)
+        public LoginResponse login(string email)
         {
             LoginResponse response = new LoginResponse();
 
@@ -71,19 +71,18 @@ namespace SoapServiceWebApp
                 {
                     ClientRepository userRepository = new ClientRepository(context);
                     ClientService clientService = new ClientService(userRepository);
-                    Client clientsExists = clientService.GetClientByEmailAndPassword(email, password);
+                    Client clientsExists = clientService.GetClientByEmail(email);
 
                     if (clientsExists != null)
                     {
-                        response.Messagge = "Client Logged Succesully";
+                        response.Messagge = "Client Exists, now the rest sercice must validate the password";
                         response.Client = clientsExists;
-                        response.Client.Password = null;
                         response.StatusCode = 200;
                         return response;
                     }
                     else
                     {
-                        response.Messagge = "Invalid Credentials";
+                        response.Messagge = "The client does't exists";
                         response.StatusCode = 401;
                         return response;
                     }
