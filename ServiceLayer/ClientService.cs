@@ -22,9 +22,9 @@ namespace ServiceLayer
         {
             return _clientRepository.GetClient(clientId, phone);
         }
-        public Client GetClientByEmailAndPassword(string email, string password)
+        public Client GetClientByEmail(string email)
         {
-            Client validClient = _clientRepository.GetClientByCredentials(email, password);
+            Client validClient = _clientRepository.GetClientByEmail(email);
             return validClient;
         }
         public void CreateClient(Client client)

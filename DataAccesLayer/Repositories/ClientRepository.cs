@@ -27,9 +27,9 @@ namespace DataAccesLayer.Repositories
             return _context.Set<Client>().SingleOrDefault(x => x.ClientId == clientId && x.Phone == phone);
         }
 
-        public Client GetClientByCredentials(string email, string password)
+        public Client GetClientByEmail(string email)
         {   
-            Client client = _context.Set<Client>().SingleOrDefault(x => x.Email == email && x.Password == password);
+            Client client = _context.Set<Client>().SingleOrDefault(x => x.Email == email);
             return client;
         }
 
