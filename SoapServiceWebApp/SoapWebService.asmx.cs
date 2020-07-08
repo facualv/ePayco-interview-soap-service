@@ -22,7 +22,7 @@ namespace SoapServiceWebApp
     public class SoapWebService : WebService
     {
         [WebMethod]
-        public SignInResponse signIn(string clientId, string name, string phone, string email, string password)
+        public SignInResponse signup(string clientId, string name, string phone, string email, string password)
         {
             SignInResponse response = new SignInResponse();
 
@@ -54,7 +54,7 @@ namespace SoapServiceWebApp
             {
                 response.Client = null;
                 response.IsError = true;
-                response.Messagge = exeption.Message;
+                response.Messagge = exeption.InnerException.Message;
                 response.StatusCode = 500;
                 return response;
             }
@@ -92,7 +92,7 @@ namespace SoapServiceWebApp
             catch (Exception exeption)
             {
                 response.IsError = true;
-                response.Messagge = exeption.Message;
+                response.Messagge = exeption.InnerException.Message;
                 response.Client = null;
                 return response;
             }
@@ -134,7 +134,7 @@ namespace SoapServiceWebApp
             catch (Exception exeption)
             {
                 response.IsError = true;
-                response.Messagge = exeption.Message;
+                response.Messagge = exeption.InnerException.Message;
                 response.StatusCode = 500;
                 return response;
             }
@@ -198,7 +198,7 @@ namespace SoapServiceWebApp
             catch (Exception exeption)
             {
                 response.IsError = true;
-                response.Messagge = exeption.Message;   
+                response.Messagge = exeption.InnerException.Message;
                 response.StatusCode = 500;
                 return response;
             }
@@ -253,7 +253,7 @@ namespace SoapServiceWebApp
             catch (Exception exeption)
             {
                 response.IsError = true;
-                response.Messagge = exeption.Message;
+                response.Messagge = exeption.InnerException.Message;
                 response.StatusCode = 500;
                 return response;
             }
