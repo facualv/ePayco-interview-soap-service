@@ -8,7 +8,7 @@ namespace DataAccesLayer.Config
 {
     public class DataBaseContext: DbContext
     {
-        private readonly String connectionString = "Server=localhost;Database=virtual_wallet;Uid=root;Pwd=lucero0405;";
+        private readonly String connectionString = "Server=localhost;Database=virtual_wallet_test;Uid=root;Pwd=lucero0405;";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
