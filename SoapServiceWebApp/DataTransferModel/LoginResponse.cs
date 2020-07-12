@@ -11,6 +11,6 @@ namespace SoapServiceWebApp.DataTransferModel
     public class LoginResponse: BaseResponse
     {
         [DataMember]
-        public Client Client { get; set; }
+        public Client client { get; set; }
     }
 }

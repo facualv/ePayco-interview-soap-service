@@ -43,19 +43,19 @@ namespace SoapServiceWebApp
                     clientService.CreateClient(newClient);
 
                     newClient.Password = null;
-                    response.Client = newClient;
-                    response.Messagge = "Client Created Succesully";
-                    response.StatusCode = 200;
+                    response.client = newClient;
+                    response.message = "Client Created Succesully";
+                    response.status = 200;
                     return response;
 
                 }
             }
             catch (Exception exeption)
             {
-                response.Client = null;
-                response.IsError = true;
-                response.Messagge = exeption.InnerException.Message;
-                response.StatusCode = 500;
+                response.client = null;
+                response.error = true;
+                response.message = exeption.InnerException.Message;
+                response.status = 500;
                 return response;
             }
         }
@@ -75,15 +75,16 @@ namespace SoapServiceWebApp
 
                     if (clientsExists != null)
                     {
-                        response.Messagge = "Client Exists, now the rest sercice must validate the password";
-                        response.Client = clientsExists;
-                        response.StatusCode = 200;
+                        response.message = "Client Exists";
+                        response.client = clientsExists;
+                        response.status = 200;
                         return response;
                     }
                     else
                     {
-                        response.Messagge = "The client does't exists";
-                        response.StatusCode = 401;
+                        response.message = "The email provided is not registered in our database";
+                        response.error = true;
+                        response.status = 401;
                         return response;
                     }
 
@@ -91,9 +92,9 @@ namespace SoapServiceWebApp
             }
             catch (Exception exeption)
             {
-                response.IsError = true;
-                response.Messagge = exeption.InnerException.Message;
-                response.Client = null;
+                response.error = true;
+                response.message = exeption.InnerException.Message;
+                response.client = null;
                 return response;
             }
         }
@@ -117,25 +118,25 @@ namespace SoapServiceWebApp
                         WalletRepository walletRepository = new WalletRepository(context);
                         WalletService walletService = new WalletService(walletRepository);
 
-                        response.CurrentBalance = walletService.GetBalance(clientId);
-                        response.Messagge = "Current Balance Retrieved Succesully";
-                        response.StatusCode = 200;
+                        response.balance = walletService.GetBalance(clientId);
+                        response.message = "Current Balance Retrieved Succesully";
+                        response.status = 200;
                         return response;
                     }
                     else
                     {
-                        //response.CurrentBalance = walletService.GetBalance(clientId);
-                        response.Messagge = "Invalid Credentials";
-                        response.StatusCode = 401;
+                        response.message = "Invalid Credentials";
+                        response.error = true;
+                        response.status = 401;
                         return response;
                     }
                 }
             }
             catch (Exception exeption)
             {
-                response.IsError = true;
-                response.Messagge = exeption.InnerException.Message;
-                response.StatusCode = 500;
+                response.error = true;
+                response.message = exeption.InnerException.Message;
+                response.status = 500;
                 return response;
             }
         }
@@ -171,35 +172,37 @@ namespace SoapServiceWebApp
                             Transaction payment = new Transaction();
                             payment.WalletId = walletId;
                             payment.Ammount = ammount;
-                            payment.Type = "pay";
+                            payment.Type = "payment";
                             payment.Detail = detail;
                             transactionService.CreateTransaction(payment);
 
-                            response.Messagge = "Payment Succesull";
-                            response.StatusCode = 200;
+                            response.message = "Payment Succesull";
+                            response.status = 200;
                             return response;
                         }
                         else
                         {
-                            response.Messagge = "Your current balance is not enough to make the payment";
-                            response.StatusCode = 403;
+                            response.message = "Your current balance is not enough to make the payment";
+                            response.error = true;
+                            response.status = 403;
                             return response;
                         }
 
                     }
                     else
                     {
-                        response.Messagge = "Invalid Credentials";
-                        response.StatusCode = 401;
+                        response.message = "Invalid Credentials";
+                        response.status = 401;
+                        response.error = true;
                         return response;
                     }                
                 }
             }
             catch (Exception exeption)
             {
-                response.IsError = true;
-                response.Messagge = exeption.InnerException.Message;
-                response.StatusCode = 500;
+                response.error = true;
+                response.message = exeption.InnerException.Message;
+                response.status = 500;
                 return response;
             }
         }
@@ -227,7 +230,6 @@ namespace SoapServiceWebApp
                         TransactionRepository transactionRepository = new TransactionRepository(context);
                         TransactionService transactionService = new TransactionService(transactionRepository);
 
-                        decimal currentBalance = walletService.GetBalance(clientId);
                         Wallet wallet = walletService.GetWalletByClientId(clientId);
 
                         Transaction recharge = new Transaction();
@@ -237,24 +239,25 @@ namespace SoapServiceWebApp
                         recharge.Detail = detail;
                         transactionService.CreateTransaction(recharge);
 
-                        response.Messagge = "Recharge Completed Succesfully";
-                        response.StatusCode = 200;
+                        response.message = "Recharge Completed Succesfully";
+                        response.status = 200;
 
                         return response;
                     }
                     else
                     {
-                        response.Messagge = "Invalid Credentials";
-                        response.StatusCode = 401;
+                        response.message = "Invalid Credentials";
+                        response.error = true;
+                        response.status = 401;
                         return response;
                     }   
                 }
             }
             catch (Exception exeption)
             {
-                response.IsError = true;
-                response.Messagge = exeption.InnerException.Message;
-                response.StatusCode = 500;
+                response.error = true;
+                response.message = exeption.InnerException.Message;
+                response.status = 500;
                 return response;
             }
         }

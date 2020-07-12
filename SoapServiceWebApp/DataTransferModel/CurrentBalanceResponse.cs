@@ -10,7 +10,7 @@ namespace SoapServiceWebApp.DataTransferModel
     public class CurrentBalanceBaseResponse : BaseResponse
     {
         [DataMember]
-        public decimal CurrentBalance { get; set; }
+        public decimal balance { get; set; }
 
     }
 }

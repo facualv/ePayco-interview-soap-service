@@ -11,13 +11,13 @@ namespace SoapServiceWebApp.DataTransferModel
     {
 
         [DataMember]
-        public String Messagge { get; set; }
+        public String message { get; set; }
 
         [DataMember]
-        public int StatusCode { get; set; }
+        public int status { get; set; }
 
         [DataMember]
-        public bool IsError { get; set; }
+        public bool error { get; set; }
 
 
     }
